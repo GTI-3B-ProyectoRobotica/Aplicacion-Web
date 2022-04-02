@@ -2,7 +2,8 @@ document.addEventListener('DOMContentLoaded', event => {
     console.log("entro en la pagina")
     
     document.getElementById("btn_con").addEventListener("click", connect)
-    //document.getElementById("btn_dis").addEventListener("click", disconnect)
+    document.getElementById("btn_dis").addEventListener("click", disconnect)
+    //document.getElementById("btn_con_verificar").addEventListener("click", )
 
     data = {
         // ros connection
