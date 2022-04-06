@@ -5,12 +5,11 @@
 //===================================================================================================================================================
 
 const IP_PUERTO = "http://192.168.87.164:8080"
-const IP_ROS = "ws://192.168.87.164:9090/"
+const IP_ROS = "ws://192.168.85.207:9090/"
 
 document.addEventListener('DOMContentLoaded', event => {
 
     console.log("entro en la pagina")
-    document.getElementById("btn_con").addEventListener("click", connect)
     document.getElementById("btn_dis").addEventListener("click", disconnect)
     document.getElementById("btn_con_verificar").addEventListener("click", enviarRobotZonaRecogida)
 
@@ -58,12 +57,12 @@ document.addEventListener('DOMContentLoaded', event => {
     // Funcion enviarRobotZonaRecogida()
     //==========================================================================================================================
     async function enviarRobotZonaRecogida() {
+        connect()
         try {
             console.log("Clic en enviarRobotZonaRecogida")
         
-            zonaLlegadaProductos = await getZonaLlegadaProductosByIdMapa(1)
+            //zonaLlegadaProductos = await getZonaLlegadaProductosByIdMapa(1)
 
-            if(zonaLlegadaProductos != {}){
                 // enviar al servicio ros
 
                 data.service_busy = true
@@ -72,13 +71,13 @@ document.addEventListener('DOMContentLoaded', event => {
                 //definimos los datos del servicio
                 let service = new ROSLIB.Service({
                     ros: data.ros,
-                    name: '/escaneo_autonomo',
-                    serviceType: 'custom_interface/srv/EscanearMsg'
+                    name: '/IrZona',
+                    serviceType: 'automatix_custom_interface/srv/IrZona'
                 })
 
                 let request = new ROSLIB.ServiceRequest({
                     //move: zonaLlegadaProductos.zonaJsontoString()
-                    escanear:"escanear"
+                    zona:"transportista"
                 })
 
                 service.callService(request, (result) => {
@@ -90,9 +89,7 @@ document.addEventListener('DOMContentLoaded', event => {
                     console.error(error)
                     mostrar(error)
                 })	
-            }else{
-                mostrar("El mapa no tiene una zona de llegada")
-            }
+
 
         }catch(error){
             mostrar(error)
