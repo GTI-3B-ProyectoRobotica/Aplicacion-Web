@@ -13,6 +13,8 @@ var ALTURA = 0
 var maxXCanvas = 0;
 var maxYCanvas = 0;
 
+var mapa = null;
+
 var posicion = []
 
 document.addEventListener('DOMContentLoaded', event => {
@@ -81,14 +83,19 @@ document.addEventListener('DOMContentLoaded', event => {
             defaultCanvasWidth = 300
             defaultCanvasHeight = 150
 
-            m = await obtenerMapa(1)
+            mapa = await obtenerMapa(1)
             var image = new Image();
-            image.src = "data:image/png;base64," + m.imagen
+            image.src = "data:image/png;base64," + mapa.imagen
             image.onload = function () {
 
                 var canvas2 = ctx.canvas ;
                 maxXCanvas = image.width * tam
                 maxYCanvas = image.height * tam
+
+                mapa.maxMapaX = image.width;
+                mapa.maxMapaY = image.height;
+
+
                 canvas.style.width = image.width * tam
                 canvas.style.height = image.height * tam
                 ctx.clearRect(0,0,canvas2.width, canvas2.height);
@@ -135,7 +142,7 @@ document.addEventListener('DOMContentLoaded', event => {
     async function guardar_zona(){
         conectar()
         console.log("Entro en guardar zona")
-        let posicionInicial = cambio_base_punto(posicion[0])
+        let posicionInicial = cambio_base_punto(posicion[0],)
         let posicionFinal = cambio_base_punto(posicion[1])
 
         console.log(posicionInicial)
@@ -184,11 +191,10 @@ document.addEventListener('DOMContentLoaded', event => {
      * @returns {x:N,y:N}
      */
     function cambio_base_punto(punto){
-        let maxMapaX= 134;
-        let maxMapaY = 90;
+        
         return {
-            x: punto.x*0.05*maxMapaX/maxXCanvas,
-            y: punto.y*maxMapaY*0.05/maxYCanvas,
+            x: punto.x*mapa.resolucion*mapa.maxMapaX/maxXCanvas,
+            y: punto.y*mapa.resolucion*mapa.maxMapaY/maxYCanvas,
             
         }
     }
@@ -355,16 +361,15 @@ class Zona {
 //==============================================================================================================================
 class Mapa {
     // constructor parametrizado
-    constructor(imagen, xOrigen, yOrigen) {
+    constructor(imagen, resolucion) {
         this.imagen = imagen;
-        this.xOrigen = xOrigen;
-        this.yOrigen = yOrigen;
+        this.resolucion = resolucion;
     }
     // constructor desde el json
     static MapaFromJson(json) {
         console.log("Desde constructor")
         console.log(json)
-        return new Mapa(json.imagen, json.xOrigen, json.yOrigen)
+        return new Mapa(json.imagen, json.resolucion)
     }
 }
 
