@@ -4,16 +4,14 @@
 // Descripcion: En este archivo se encuentran todas las funiones que utiliza la app del transportista: connect(),disconnect(),enviarRobotZonaRecogida().
 //===================================================================================================================================================
 
-const IP_PUERTO = "http://192.168.85.84:8080"
+const IP_PUERTO = "http://localhost:8080"
 
 const IP_ROS = "ws://192.168.85.207:9090/"
 
-var ALTURA = 0
 
-var maxXCanvas = 0;
-var maxYCanvas = 0;
 
-var mapa = null;
+
+var mapaCanvas = null;
 
 var posicion = []
 
@@ -79,46 +77,23 @@ document.addEventListener('DOMContentLoaded', event => {
 
         try {
 
-            tam = 5
-            defaultCanvasWidth = 300
-            defaultCanvasHeight = 150
+            
 
-            mapa = await obtenerMapa(1)
-            var image = new Image();
-            image.src = "data:image/png;base64," + mapa.imagen
-            image.onload = function () {
+            // obtener imagen del mapa del servidor
+            let mapa = await obtenerMapa(1)
 
-                var canvas2 = ctx.canvas ;
-                maxXCanvas = image.width * tam
-                maxYCanvas = image.height * tam
-
-                mapa.maxMapaX = image.width;
-                mapa.maxMapaY = image.height;
+            mapaCanvas = new CanvasMapa(ctx,mapa)
+                   
 
 
-                canvas.style.width = image.width * tam
-                canvas.style.height = image.height * tam
-                ctx.clearRect(0,0,canvas2.width, canvas2.height);
-                ALTURA = image.height*tam;
-                ctx.drawImage(image, 0,0,
-                    image.width*tam,image.height*tam,
-                    0,0, defaultCanvasWidth*tam,defaultCanvasHeight*tam);
-
-            }
-
-
-            canvas.addEventListener("click", function (event) {
-
-                var ctx = canvas.getContext("2d");
+            mapaCanvas.canvas.addEventListener("click", function (event) {
+                
+                var ctx = mapaCanvas.canvas.getContext("2d");
                 ctx.beginPath();
-                pos = relativePos(event, ctx.canvas);
+                pos = getMousePos(event, mapaCanvas.canvas);
                 console.log(pos)
-                console.log("posicion final= ", posicion)
-                console.log("posicion inicial= ", pos)
-                if(posicion.length < 2){
-                    posicion.push(pos)
-                }
-            })
+                mapaCanvas.pintar_punto(pos.x,pos.y)
+            },false)
 
         } catch (err) {
             console.log(err)
@@ -128,12 +103,11 @@ document.addEventListener('DOMContentLoaded', event => {
 
     }
 
-    function relativePos(event, element) {
-        var rect = element.getBoundingClientRect();
-        console.log(ALTURA)
+    function getMousePos(event, canvas) {
+        var rect = canvas.getBoundingClientRect();
         return {
             x: Math.floor(event.clientX - rect.left),
-            y: ALTURA - Math.floor(event.clientY - rect.top)
+            y: Math.floor(event.clientY - rect.top)
         };
     }
     //==========================================================================================================================
@@ -142,13 +116,13 @@ document.addEventListener('DOMContentLoaded', event => {
     async function guardar_zona(){
         conectar()
         console.log("Entro en guardar zona")
-        let posicionInicial = cambio_base_punto(posicion[0],)
+        let posicionInicial = cambio_base_punto(posicion[0])
         let posicionFinal = cambio_base_punto(posicion[1])
 
         console.log(posicionInicial)
         console.log(posicionFinal)
         let nombre_zona = document.getElementById("input_nombre")
-        let zona =  "transportista:" + posicionInicial.x + "," + posicionInicial.y+ "," + posicionFinal.x + "," + posicionFinal.y  + ";"
+        let zona =  "transportista:" + posicionInicial.x + "," + posicionInicial.y+ "," + posicionFinal.x + "," + posicionFinal.y
        // let zona =  "transportista:" + 3 + "," + 1 + "," + 3 + "," + 2 + ";"
         try {
             
@@ -192,9 +166,11 @@ document.addEventListener('DOMContentLoaded', event => {
      */
     function cambio_base_punto(punto){
         
+        let y = mapaCanvas.altura - punto.y // girar la y porque el robot lo interpreta al reves, el origen de cordenadas esta arriba
+                                            // en el mapa esta abajo
         return {
             x: punto.x*mapa.resolucion*mapa.maxMapaX/maxXCanvas,
-            y: punto.y*mapa.resolucion*mapa.maxMapaY/maxYCanvas,
+            y: y*mapa.resolucion*mapa.maxMapaY/maxYCanvas,
             
         }
     }
@@ -325,6 +301,8 @@ document.addEventListener('DOMContentLoaded', event => {
     function mostrar(texto) {
         document.getElementById("consola").innerHTML = texto;
     }
+
+   
 });
 
 // ........................................................................................................................
@@ -336,17 +314,17 @@ document.addEventListener('DOMContentLoaded', event => {
 //==============================================================================================================================
 class Zona {
     // constructor parametrizado
+    // nombre, (x,y) superior, (x,y) inferiro y color asociado (se pone al pintar en el canvas)
     constructor(nombre, xInferior, yInferior, xSuperior, ySuperior) {
         this.nombre = nombre;
         this.xInferior = xInferior;
         this.yInferior = yInferior;
         this.xSuperior = xSuperior;
         this.ySuperior = ySuperior;
+        this.color = ""
     }
     // constructor desde el json
     static ZonaFromJson(json) {
-        console.log("Desde constructor")
-        console.log(json)
         return new Zona(json.nombre, json['xInferior'], json['yInferior'], json['xSuperior'], json['ySuperior'])
     }
     /**
@@ -364,6 +342,12 @@ class Mapa {
     constructor(imagen, resolucion) {
         this.imagen = imagen;
         this.resolucion = resolucion;
+        this.zonas = [
+            new Zona("xdd",0,0,10,10),
+            new Zona("zona1",49,53,241,197),
+            new Zona("zona2",559,45,622,112),
+            new Zona("zona3",436,398,377,155),
+        ]
     }
     // constructor desde el json
     static MapaFromJson(json) {
@@ -373,3 +357,118 @@ class Mapa {
     }
 }
 
+
+//==============================================================================================================================
+// Clase que representa un mapa en un canvas donde se pueden pintar rectangulos y puntos
+//==============================================================================================================================
+class CanvasMapa{
+
+    
+
+    constructor(contexto, mapa){
+    
+        this.canvas = contexto.canvas;
+        this.context = contexto;
+        this.context.moveTo(0, 0);
+        this.mapa = mapa;
+
+        this.defaultCanvasWidth = 300
+        this.defaultCanvasHeight = 150
+        
+        this.altura = 0 // usado para calcular la poscion de los puntos x,y del robot (el mapa lo interpreta al reves que el canvas)
+
+        this.tamEscaladoImagen = 5
+
+
+        this.image = new Image();
+        this.image.src = "data:image/png;base64," + this.mapa.imagen
+       
+        var objeto = this;
+
+        this.image.onload = function(){
+            objeto.redimensionar_mapa(objeto.tamEscaladoImagen)
+            //objeto.pintar_zonas()
+             
+        };
+    }
+
+    /**
+     * Metodo para redimensionar un png de un canvas x veces
+     * @param tam factor de escalado
+     */
+    redimensionar_mapa(tam){
+        var canvasTemp = canvas;
+    
+        this.mapa.maxMapaX = this.image.width;
+        this.mapa.maxMapaY = this.image.height;
+
+        this.canvas.width = this.image.width*tam// tamaño para el html
+        this.canvas.height = this.image.height*tam
+    
+        
+        this.context.clearRect(0,0,canvasTemp.width, canvasTemp.height);
+        this.altura = this.defaultCanvasHeight
+        this.context.drawImage(this.image,
+            0,0, this.image.width, this.image.height,0,0,this.canvas.width,this.canvas.height);
+    }
+
+     //==========================================================================================================================
+    // Funcion  pintar_zonas()
+    //========================================================================================================================== 
+    /**
+     *pinta rectangulos en el canvas con las posiciones de las zonas
+     */
+    pintar_zonas(){
+        let cont = 0
+        this.mapa.zonas.forEach(zona => {
+            console.log(zona)
+            let color =  this.selectColor(++cont,this.mapa.zonas.length);
+            this.context.fillStyle = color;
+            zona.color = color;
+            
+            this.context.fillRect(zona.xSuperior,zona.ySuperior,zona.xInferior,zona.yInferior);
+        });
+        
+    }
+
+    /**
+     * Dibuja un punto en un canvas
+     * 
+     * @param {int} x posicion x en del rato del canvas 
+     * @param {int} y posicion y en pixeles del canvas del punto a dibujar
+     * @param {*} canvas donde se va a pintar el punto
+     */
+     pintar_punto(x,y){
+        
+
+        this.context.beginPath();
+        
+        this.context.arc(x, y, 1, 0, 2 * Math.PI, false);
+        this.context.fillStyle = 'black';
+        this.context.fill();
+        this.context.lineWidth = 5;
+        this.context.strokeStyle = '#000';
+        this.context.stroke();
+    }
+    /**
+     * Funcion para limpiar el canvas
+     * @param {*} canvas canvas el cual queremos borrar
+     */
+    borrar_canvas(){
+    
+        this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+    }
+    
+    /**
+     * Divide el ciruclo en n colores y devuelve uno de esos
+     * 
+     * @param {int} colorNum numero de la division del color que quieres que devuelvas
+     * @param {int} colors numero de divisiones del circulo cromatico
+     * @returns el color en hsl con 60% de transparencias
+     */
+    selectColor(colorNum, colors){
+        if (colors < 1) colors = 1; // defaults to one color - avoid divide by zero
+        return "hsl(" + (colorNum * (360 / colors) % 360) + ",100%,50%,60%)";
+    }
+
+}
