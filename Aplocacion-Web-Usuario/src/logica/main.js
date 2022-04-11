@@ -321,8 +321,36 @@ class Zona {
         this.yInferior = yInferior;
         this.xSuperior = xSuperior;
         this.ySuperior = ySuperior;
+
         this.color = ""
+
+        // calcular el punto mas cerca del 0 y el mas lejos para la representacion
+        let d1 = Math.sqrt(Math.pow(this.xInferior - 0,2) + Math.pow(this.yInferior - 0,2))
+        let d2 = Math.sqrt(Math.pow(this.xSuperior - 0,2) + Math.pow(this.ySuperior - 0,2))
+
+        if(d1<d2){
+            this.punto_pequenyo = {
+                x: this.xInferior,
+                y: this.yInferior
+            }
+            this.punto_grande = {
+                x: this.xSuperior,
+                y: this.ySuperior
+            }
+        }else{
+            this.punto_grande = {
+                x: this.xInferior,
+                y: this.yInferior
+            }
+            this.punto_pequenyo = {
+                x: this.xSuperior,
+                y: this.ySuperior
+            }
+        }
+
+        
     }
+
     // constructor desde el json
     static ZonaFromJson(json) {
         return new Zona(json.nombre, json['xInferior'], json['yInferior'], json['xSuperior'], json['ySuperior'])
@@ -343,10 +371,9 @@ class Mapa {
         this.imagen = imagen;
         this.resolucion = resolucion;
         this.zonas = [
-            new Zona("xdd",0,0,10,10),
-            new Zona("zona1",49,53,241,197),
-            new Zona("zona2",559,45,622,112),
-            new Zona("zona3",436,398,377,155),
+            new Zona("zona1",41,34,243,197),
+            new Zona("zona2",560,45,627,130),
+            new Zona("zona3",272,148,355,403),
         ]
     }
     // constructor desde el json
@@ -387,7 +414,7 @@ class CanvasMapa{
 
         this.image.onload = function(){
             objeto.redimensionar_mapa(objeto.tamEscaladoImagen)
-            //objeto.pintar_zonas()
+            objeto.pintar_zonas()
              
         };
     }
@@ -426,7 +453,10 @@ class CanvasMapa{
             this.context.fillStyle = color;
             zona.color = color;
             
-            this.context.fillRect(zona.xSuperior,zona.ySuperior,zona.xInferior,zona.yInferior);
+            // void ctx.fillRect(x, y, width, height);
+            let width = zona.punto_grande.x-zona.punto_pequenyo.x;
+            let height = zona.punto_grande.y-zona.punto_pequenyo.y
+            this.context.fillRect(zona.punto_pequenyo.x,zona.punto_pequenyo.y,width,height);
         });
         
     }
@@ -472,3 +502,5 @@ class CanvasMapa{
     }
 
 }
+
+
