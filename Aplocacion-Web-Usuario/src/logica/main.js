@@ -13,7 +13,7 @@ const IP_ROS = "ws://192.168.85.207:9090/"
 
 var mapaCanvas = null;
 
-var posicion = []
+
 
 document.addEventListener('DOMContentLoaded', event => {
 
@@ -21,11 +21,24 @@ document.addEventListener('DOMContentLoaded', event => {
     document.getElementById("btn_esc").addEventListener("click", escan)
     document.getElementById("btn_get_map").addEventListener("click", btn_get_mapa)
     document.getElementById("btn_dis").addEventListener("click", disconnect)
-    document.getElementById("btn_guardar_zona").addEventListener("click", guardar_zona)
 
+    // añadir zonas -----------------------------------
+    var btn_add_zona = document.getElementById("btn_add_zona")
+    var btn_cancelar_add_zona = document.getElementById("btn_cancelar_add_zona")
+    var bloque_guardar_zona = document.getElementById("div_guardar_zona")
+
+    btn_add_zona.addEventListener("click", add_zona);
+    btn_cancelar_add_zona.addEventListener("click", cancelar_add_zona);
+    document.getElementById("btn_guardar_add_zona").addEventListener("click", guardar_add_zona);
+
+    var is_add_zona_enable = false;
+    var zonaACrear = [] // tendra max dos puntos
+
+    // canvas --------------------------------------
     var canvas = document.getElementById("canvas")
     var ctx = canvas.getContext("2d");
 
+    // ros2
     data = {
         // ros connection
         ros: null,
@@ -77,22 +90,38 @@ document.addEventListener('DOMContentLoaded', event => {
 
         try {
 
-            
+            btn_add_zona.style.display = "none"
 
             // obtener imagen del mapa del servidor
             let mapa = await obtenerMapa(1)
 
             mapaCanvas = new CanvasMapa(ctx,mapa)
-                   
+            
+            btn_add_zona.style.display = "block"
 
 
             mapaCanvas.canvas.addEventListener("click", function (event) {
                 
-                var ctx = mapaCanvas.canvas.getContext("2d");
-                ctx.beginPath();
-                pos = getMousePos(event, mapaCanvas.canvas);
-                console.log(pos)
-                mapaCanvas.pintar_punto(pos.x,pos.y)
+                // funcion on click del canvas-------------------------------------------
+                if(is_add_zona_enable){
+
+                    // obtener el punto
+                    var ctx = mapaCanvas.canvas.getContext("2d");
+                    ctx.beginPath();
+                    pos = getMousePos(event, mapaCanvas.canvas);
+                    
+
+                    if(zonaACrear.length < 2){
+                        // si hay 0 o uno hacer append del punto
+                        zonaACrear.push(pos)
+                        mapaCanvas.pintar_punto(pos.x,pos.y)
+                    }
+                    
+
+                }
+                
+
+
             },false)
 
         } catch (err) {
@@ -113,20 +142,14 @@ document.addEventListener('DOMContentLoaded', event => {
     //==========================================================================================================================
     // Funcion grabarZonas() (ROS)
     //==========================================================================================================================
-    async function guardar_zona(){
+    async function guardar_zona_ros2(){
         conectar()
-        console.log("Entro en guardar zona")
-        let posicionInicial = cambio_base_punto(posicion[0])
-        let posicionFinal = cambio_base_punto(posicion[1])
-
-        console.log(posicionInicial)
-        console.log(posicionFinal)
-        let nombre_zona = document.getElementById("input_nombre")
+        // transformar el mapaCanvas.zonas al formato admitido por el servidor ros2
         let zona =  "transportista:" + posicionInicial.x + "," + posicionInicial.y+ "," + posicionFinal.x + "," + posicionFinal.y
        // let zona =  "transportista:" + 3 + "," + 1 + "," + 3 + "," + 2 + ";"
         try {
             
-            console.log("Clic en guardar_zona")
+            console.log("Enviar zonas al servicio")
 
             data.service_busy = true
             data.service_response = ''
@@ -155,6 +178,8 @@ document.addEventListener('DOMContentLoaded', event => {
         }
 
     }
+    
+    
     //==========================================================================================================================
     // Funcion cambio_base_punto() 
     //==========================================================================================================================
@@ -302,6 +327,41 @@ document.addEventListener('DOMContentLoaded', event => {
         document.getElementById("consola").innerHTML = texto;
     }
 
+    //==========================================================================================================================
+    // ZONA añadir zonas en el canvas
+    //==========================================================================================================================  
+    function add_zona(){
+        is_add_zona_enable = true;
+        btn_add_zona.style.display = "none"
+        btn_cancelar_add_zona.style.display = "block"
+        bloque_guardar_zona.style.display = "block"
+    }
+    function cancelar_add_zona(){
+        is_add_zona_enable = false;
+        btn_add_zona.style.display = "block"
+        btn_cancelar_add_zona.style.display = "none"
+        bloque_guardar_zona.style.display = "none"
+        mapaCanvas.borrar_canvas();
+        zonaACrear = []
+        document.getElementById("input_nombre_guardar_zona").value = ""
+    }
+    function guardar_add_zona(){
+        let nombre = document.getElementById("input_nombre_guardar_zona").value
+        console.log(nombre);
+        console.log(zonaACrear);
+        if(nombre.trim().length > 0 && zonaACrear.length==2){
+            mapaCanvas.mapa.zonas.push(new Zona(nombre, zonaACrear[0].x,zonaACrear[0].y,zonaACrear[1].x,zonaACrear[1].y))
+            mapaCanvas.borrar_canvas()
+            guardar_zona_ros2()
+            cancelar_add_zona()
+        }else{
+            mostrar("Para crear una zona deben haber dos puntos y un nombre")
+        }
+        
+    }
+    //==========================================================================================================================
+    // FIN ZONA añadir zonas en el canvas
+    //==========================================================================================================================  
    
 });
 
@@ -406,7 +466,15 @@ class CanvasMapa{
 
         this.tamEscaladoImagen = 5
 
+        this.dibujarMapa();
+    }
 
+
+    /**
+     * Dibuja la imagen del mapa en el canvas
+     */
+    dibujarMapa(){
+        
         this.image = new Image();
         this.image.src = "data:image/png;base64," + this.mapa.imagen
        
@@ -418,7 +486,6 @@ class CanvasMapa{
              
         };
     }
-
     /**
      * Metodo para redimensionar un png de un canvas x veces
      * @param tam factor de escalado
@@ -487,6 +554,7 @@ class CanvasMapa{
     borrar_canvas(){
     
         this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+        this.dibujarMapa()
     }
     
     /**
