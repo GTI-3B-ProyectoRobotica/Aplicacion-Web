@@ -519,14 +519,14 @@ class Zona {
 //==============================================================================================================================
 class Mapa {
     // constructor parametrizado
-    constructor(imagen, resolucion) {
+    constructor(imagen, resolucion, zonas) {
         this.imagen = imagen;
         this.resolucion = resolucion;
-        this.zonas = [
-            new Zona("zona1",41,34,243,197),
-            new Zona("zona2",560,45,627,130),
-            new Zona("zona3",272,148,355,403),
-        ]
+        
+        this.zonas = []
+        for(let i = 0; i<zonas.length;i++){
+            this.zonas.push(Zona.ZonaFromJson(zonas[i]))
+        }
     }
 
     /**
@@ -556,7 +556,7 @@ class Mapa {
 
     // constructor desde el json
     static MapaFromJson(json) {
-        return new Mapa(json.imagen, json.resolucion)
+        return new Mapa(json.imagen, json.resolucion,json.zonas)
     }
 }
 
