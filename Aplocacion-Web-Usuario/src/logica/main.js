@@ -13,21 +13,39 @@ const IP_ROS = "ws://192.168.85.207:9090/"
 
 var mapaCanvas = null;
 
+ /**
+     * Cancela los puntos y no guarda la zona
+     */
+function borrar_zona(zona){
+    console.log("Borrar ----------------");
+    console.log(mapaCanvas.mapa.zonas);
+    let indice = mapaCanvas.mapa.zonas.indexOf(zona);
+    mapaCanvas.mapa.zonas.splice(indice,1)
+    console.log("Se borro el indice: ",indice);
+    console.log(mapaCanvas.mapa.zonas);
+    console.log("-----------------------");
+    mapaCanvas.borrar_canvas()
+ }
 
 
 document.addEventListener('DOMContentLoaded', event => {
 
-    console.log("entro en la pagina")
     document.getElementById("btn_esc").addEventListener("click", escan)
     document.getElementById("btn_get_map").addEventListener("click", btn_get_mapa)
     document.getElementById("btn_dis").addEventListener("click", disconnect)
 
     // añadir zonas -----------------------------------
     var btn_add_zona = document.getElementById("btn_add_zona")
+    var btn_add_zona_transportista = document.getElementById("btn_add_zona_transportista")
     var btn_cancelar_add_zona = document.getElementById("btn_cancelar_add_zona")
     var bloque_guardar_zona = document.getElementById("div_guardar_zona")
+    var btn_guardar_add_zona_transportista = document.getElementById("btn_guardar_add_zona_transportista")
+
+    var tabla_zonas = document.getElementById("tabla_zonas");
 
     btn_add_zona.addEventListener("click", add_zona);
+    btn_add_zona_transportista.addEventListener("click", add_zona_transportista);
+    btn_guardar_add_zona_transportista.addEventListener("click", guardar_add_zona_transportista);
     btn_cancelar_add_zona.addEventListener("click", cancelar_add_zona);
     document.getElementById("btn_guardar_add_zona").addEventListener("click", guardar_add_zona);
 
@@ -98,6 +116,9 @@ document.addEventListener('DOMContentLoaded', event => {
             mapaCanvas = new CanvasMapa(ctx,mapa)
             
             btn_add_zona.style.display = "block"
+            btn_add_zona_transportista.style.display = "block"
+
+            
 
 
             mapaCanvas.canvas.addEventListener("click", function (event) {
@@ -205,7 +226,6 @@ document.addEventListener('DOMContentLoaded', event => {
     //==========================================================================================================================
 
     async function actualizar_fichero_servicio_ir_zona(){
-        console.log("Entro en actualizar zona")
         try {
 
             data.service_busy = true
@@ -316,6 +336,9 @@ document.addEventListener('DOMContentLoaded', event => {
         }) //then
         return respuesta
     }
+
+
+
     // ........................................................................................................................
     // ........................................................................................................................
     // ........................................................................................................................
@@ -330,26 +353,23 @@ document.addEventListener('DOMContentLoaded', event => {
     //==========================================================================================================================
     // ZONA añadir zonas en el canvas
     //==========================================================================================================================  
+    
+    /**
+     * Habilita los botones de guardar zona con el input para el nombre
+     */
     function add_zona(){
         is_add_zona_enable = true;
         btn_add_zona.style.display = "none"
+        btn_add_zona_transportista.style.display = "none"
         btn_cancelar_add_zona.style.display = "block"
         bloque_guardar_zona.style.display = "block"
-    }
-    function cancelar_add_zona(){
-        is_add_zona_enable = false;
-        btn_add_zona.style.display = "block"
-        btn_cancelar_add_zona.style.display = "none"
-        bloque_guardar_zona.style.display = "none"
-        mapaCanvas.borrar_canvas();
-        zonaACrear = []
-        document.getElementById("input_nombre_guardar_zona").value = ""
-    }
+    }   
+    /**
+     * Comprueba que hay dos puntos pulsados en el mapa y un nombre que no sea "transportista"
+     */
     function guardar_add_zona(){
         let nombre = document.getElementById("input_nombre_guardar_zona").value
-        console.log(nombre);
-        console.log(zonaACrear);
-        if(nombre.trim().length > 0 && zonaACrear.length==2){
+        if(nombre.trim().length > 0 && zonaACrear.length==2 && nombre.trim() != "transportista"){
             mapaCanvas.mapa.zonas.push(new Zona(nombre, zonaACrear[0].x,zonaACrear[0].y,zonaACrear[1].x,zonaACrear[1].y))
             mapaCanvas.borrar_canvas()
             guardar_zona_ros2()
@@ -359,6 +379,51 @@ document.addEventListener('DOMContentLoaded', event => {
         }
         
     }
+    /**
+     * Habiltia los botones para guardar una zona transportista
+     * si no existe una zona transportista ya creada
+     */
+    function add_zona_transportista(){
+        if(!mapaCanvas.mapa.hasZonaTransportista()){
+            is_add_zona_enable = true;
+            btn_add_zona.style.display = "none"
+            btn_add_zona_transportista.style.display = "none"
+            btn_guardar_add_zona_transportista.style.display = "block"
+            btn_cancelar_add_zona.style.display = "block"
+        }else{
+            mostrar("Ya existe una zona de llegada de paquetes, borrala y crea una nueva si quieres modificarla")
+        }
+        
+    }
+    /**
+     * Comprueba que hay dos puntos pulsados en el mapa, guarda esa zona con el nombre de "transportista"
+     */
+    function guardar_add_zona_transportista(){
+        if(zonaACrear.length==2){
+            mapaCanvas.mapa.zonas.push(new Zona("transportista", zonaACrear[0].x,zonaACrear[0].y,zonaACrear[1].x,zonaACrear[1].y))
+            mapaCanvas.borrar_canvas()
+            guardar_zona_ros2()
+            cancelar_add_zona()
+        }else{
+            mostrar("Para crear una zona deben haber dos puntos marcados en el mapa")
+        }
+        
+    }
+    /**
+     * Cancela los puntos y no guarda la zona
+     */
+    function cancelar_add_zona(){
+        is_add_zona_enable = false;
+        btn_add_zona.style.display = "block"
+        btn_add_zona_transportista.style.display = "block"
+        btn_cancelar_add_zona.style.display = "none"
+        bloque_guardar_zona.style.display = "none"
+        btn_guardar_add_zona_transportista.style.display = "none"
+        mapaCanvas.borrar_canvas();
+        zonaACrear = []
+        document.getElementById("input_nombre_guardar_zona").value = ""
+    }
+
     //==========================================================================================================================
     // FIN ZONA añadir zonas en el canvas
     //==========================================================================================================================  
@@ -421,6 +486,33 @@ class Zona {
     toString() {
         return this.nombre + ":" + this.xInferior + "$" + this.xSuperior + "$" + this.yInferior + "$" + this.ySuperior + ";"
     }
+
+    /**
+     * @returns Objeto html de una fila en formato para mostrarlo en una tabla html
+     */
+    toFilaTabla(){
+
+        var fila = document.createElement('tr');
+        var color = document.createElement('td');
+        color.style.width = "1rem"
+        color.style.backgroundColor = this.color
+        var nombre = document.createElement('td');
+        nombre.innerText = this.nombre
+        var botonTd = document.createElement('td');
+        var btn = document.createElement('input');
+
+        btn.type = "button";
+        btn.className = "btn";
+        var zona = this;
+        btn.onclick = (function() {return function() {borrar_zona(zona);}})();
+        btn.value = "Eliminar"
+        botonTd.append(btn)
+
+        fila.append(color)
+        fila.append(nombre)
+        fila.append(botonTd)
+        return fila
+    }
 }
 //==============================================================================================================================
 //Objeto Mapa
@@ -436,10 +528,34 @@ class Mapa {
             new Zona("zona3",272,148,355,403),
         ]
     }
+
+    /**
+     * Devuelve un string con formato de tabla html con sus zonas
+     */
+    zonasToTabla(){
+        let tabla = document.createElement('table');
+        this.zonas.forEach(zona => {
+            tabla.append(zona.toFilaTabla())
+        });
+
+        return tabla;
+    }
+
+    /**
+     * @returns T/F si tiene una zona con nombre "transportista"
+     */
+     hasZonaTransportista(){
+        
+        for(let i = 0; i<this.zonas.length;i++){
+            if(this.zonas[i].nombre == "transportista"){
+                return true;
+            }
+        }
+        return false;
+    }
+
     // constructor desde el json
     static MapaFromJson(json) {
-        console.log("Desde constructor")
-        console.log(json)
         return new Mapa(json.imagen, json.resolucion)
     }
 }
@@ -469,7 +585,6 @@ class CanvasMapa{
         this.dibujarMapa();
     }
 
-
     /**
      * Dibuja la imagen del mapa en el canvas
      */
@@ -483,6 +598,8 @@ class CanvasMapa{
         this.image.onload = function(){
             objeto.redimensionar_mapa(objeto.tamEscaladoImagen)
             objeto.pintar_zonas()
+            tabla_zonas.innerHTML = ""
+            tabla_zonas.append(objeto.mapa.zonasToTabla())
              
         };
     }
@@ -515,7 +632,6 @@ class CanvasMapa{
     pintar_zonas(){
         let cont = 0
         this.mapa.zonas.forEach(zona => {
-            console.log(zona)
             let color =  this.selectColor(++cont,this.mapa.zonas.length);
             this.context.fillStyle = color;
             zona.color = color;
