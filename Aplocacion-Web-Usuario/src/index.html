@@ -40,14 +40,6 @@
                             <button class="mt-2 btn btn-success" id="btn_get_map">Cargar mapa</button>
                             <button class="mt-2 btn btn-danger" id="btn_dis">Desconectar</button>  
                         </div>
-                        <div class="card-body">
-                            <h3 class="text-center">Guardar zonas</h3>
-                            <hr>
-                            <label>Nombre de la zona:</label>
-                            <input type="text" id="input_nombre" equired minlength="4" maxlength="8" size="10">
-                            <br>
-                            <button class="mt-2 btn btn-success" id="btn_guardar_zona">Guardar zona</button>
-                        </div>
                     </div>
                 </div>
 		            <div class="col-8">
@@ -57,7 +49,22 @@
                             <p id="consola"></p>
                             <h3>Image map</h3>
                             <br>
-                            <canvas id="canvas"></canvas>
+                            <canvas id="canvas" ></canvas>
+                            <button id="btn_add_zona" style="display: none;">Añadir zona</button>
+                            <button id="btn_add_zona_transportista" style="display: none;">Añadir zona de llegada</button>
+                            <button id="btn_cancelar_add_zona" style="display: none;">Cancelar</button>
+                            <button id="btn_guardar_add_zona_transportista" style="display: none;">Guardar</button>
+                            <div id="div_guardar_zona"  style="display: none;">
+                                <label>Nombre de la zona:</label>
+                                <input type="text" id="input_nombre_guardar_zona" required  size="10">
+                                <button id="btn_guardar_add_zona">Guardar</button>
+                            </div>
+                            
+                            <div id="tabla_zonas">
+                                
+
+                            </div>
+
                         </div>
                     </div>
                 </div>
