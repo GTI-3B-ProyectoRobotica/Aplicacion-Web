@@ -9,8 +9,6 @@ const IP_PUERTO = "http://localhost:8080"
 const IP_ROS = "ws://192.168.85.207:9090/"
 
 
-
-
 var mapaCanvas = null;
 
  /**
@@ -114,6 +112,7 @@ document.addEventListener('DOMContentLoaded', event => {
             let mapa = await obtenerMapa(1)
 
             mapaCanvas = new CanvasMapa(ctx,mapa)
+            mapaCanvas.mapa.id = 1
             
             btn_add_zona.style.display = "block"
             btn_add_zona_transportista.style.display = "block"
@@ -337,6 +336,24 @@ document.addEventListener('DOMContentLoaded', event => {
         return respuesta
     }
 
+    async function guardar_zonas() {
+
+        let body = []
+        mapaCanvas.mapa.zonas.forEach(zona => {
+
+            body.push({"nombre": zona.nombre, "mapa": mapaCanvas.mapa.id,"xSuperior": zona.xSuperior, "ySuperior": zona.ySuperior, "xInferior": zona.xInferior, "yInferior": zona.yInferior})
+        });
+        let respuesta = await fetch(IP_PUERTO + "/zonas", {
+            method: "POST",
+            headers: { 'User-Agent': 'Automatix', 'Content-Type': 'application/json' },
+            body: JSON.stringify(body)
+            }).then(response => {
+                console.log(response)
+            })
+        return respuesta
+
+    }
+
 
 
     // ........................................................................................................................
@@ -372,6 +389,7 @@ document.addEventListener('DOMContentLoaded', event => {
         if(nombre.trim().length > 0 && zonaACrear.length==2 && nombre.trim() != "transportista"){
             mapaCanvas.mapa.zonas.push(new Zona(nombre, zonaACrear[0].x,zonaACrear[0].y,zonaACrear[1].x,zonaACrear[1].y))
             mapaCanvas.borrar_canvas()
+            guardar_zonas()
             guardar_zona_ros2()
             cancelar_add_zona()
         }else{
@@ -402,6 +420,7 @@ document.addEventListener('DOMContentLoaded', event => {
         if(zonaACrear.length==2){
             mapaCanvas.mapa.zonas.push(new Zona("transportista", zonaACrear[0].x,zonaACrear[0].y,zonaACrear[1].x,zonaACrear[1].y))
             mapaCanvas.borrar_canvas()
+            guardar_zonas()
             guardar_zona_ros2()
             cancelar_add_zona()
         }else{
