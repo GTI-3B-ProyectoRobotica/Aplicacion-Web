@@ -68,7 +68,7 @@ class ROS2{
         this.conectar()
         // transformar el mapaCanvas.zonas al formato admitido por el servidor ros2
         // hacer algo tipo let textoAEnviar += zona.toString() y que devuelva ya con el formato que admite ros
-        let zona =  "transportista:" + posicionInicial.x + "," + posicionInicial.y+ "," + posicionFinal.x + "," + posicionFinal.y
+        //let zona =  "transportista:" + posicionInicial.x + "," + posicionInicial.y+ "," + posicionFinal.x + "," + posicionFinal.y
        // let zona =  "transportista:" + 3 + "," + 1 + "," + 3 + "," + 2 + ";"
         try {
             

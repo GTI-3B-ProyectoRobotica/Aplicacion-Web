@@ -57,7 +57,7 @@ document.addEventListener('DOMContentLoaded', event => {
 
 
     var api_res = new Api(IP_PUERTO)
-    var rosbridge = new Api(IP_ROS)
+    var rosbridge = new ROS2(IP_ROS)
 
 
     function btn_disconnect(){
