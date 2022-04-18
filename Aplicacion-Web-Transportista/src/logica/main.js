@@ -10,7 +10,7 @@ const IP_ROS = "ws://192.168.85.207:9090/"
 document.addEventListener('DOMContentLoaded', event => {
 
     console.log("entro en la pagina")
-    document.getElementById("btn_dis").addEventListener("click", disconnect)
+    //document.getElementById("btn_dis").addEventListener("click", disconnect)
     document.getElementById("btn_con_verificar").addEventListener("click", enviarRobotZonaRecogida)
 
     data = {
@@ -106,9 +106,6 @@ document.addEventListener('DOMContentLoaded', event => {
       console.log('Clic en botón de desconexión')
       mostrar('Clic en botón de desconexión')
     }  
-
-
-
 
     // ........................................................................................................................
     // ........................................................................................................................
