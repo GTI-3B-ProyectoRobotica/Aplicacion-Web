@@ -103,32 +103,11 @@ button{
     cursor: pointer;
     
   }
-  button:before, button:after {
-    content: "";
-    z-index: -1;
-    position: absolute;
-    width: 50%;
-    height: 100%;
-    top: 0;
-    left: -50%;
-    background-color: #fff; /* color de fondo hover */
-    -webkit-transition: all 0.3s ease-in-out;
-    -o-transition: all 0.3s ease-in-out;
-    transition: all 0.3s ease-in-out;
-  }
-  button:after {
-    left: 100%;
-  }
-  button:hover {
-    color: #f28500; /* color de fuente hover */
+
+button:hover {
     box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
-  }
-  button:hover:before {
-    left: 0;
-  }
-  button:hover:after {
-    left: 50%;
-  }
+}
+
 /*=========================================================================================*/
 /*Contenedores*/
 /*=========================================================================================*/
