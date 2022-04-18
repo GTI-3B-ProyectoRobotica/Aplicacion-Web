@@ -52,7 +52,7 @@ class Zona {
      * @returns string con formato nombre:xinferior$xsuperior$yinferior$ysuperior;
      */
     toString() {
-        return this.nombre + ":" + this.xInferior + "$" + this.xSuperior + "$" + this.yInferior + "$" + this.ySuperior + ";"
+        return this.nombre + ":" + this.xInferior + "," + this.xSuperior + "," + this.yInferior + "," + this.ySuperior
     }
 
     /**
@@ -143,8 +143,6 @@ class CanvasMapa{
 
         this.defaultCanvasWidth = 300
         this.defaultCanvasHeight = 150
-        
-        this.altura = 0 // usado para calcular la poscion de los puntos x,y del robot (el mapa lo interpreta al reves que el canvas)
 
         this.tamEscaladoImagen = 5
 
@@ -184,7 +182,6 @@ class CanvasMapa{
     
         
         this.context.clearRect(0,0,canvasTemp.width, canvasTemp.height);
-        this.altura = this.defaultCanvasHeight
         this.context.drawImage(this.image,
             0,0, this.image.width, this.image.height,0,0,this.canvas.width,this.canvas.height);
     }

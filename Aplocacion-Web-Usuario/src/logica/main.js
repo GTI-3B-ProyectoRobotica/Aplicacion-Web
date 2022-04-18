@@ -181,7 +181,7 @@ document.addEventListener('DOMContentLoaded', event => {
             
             let respuestaApi = await api_res.guardar_zonas(mapaCanvas.mapa.zonas,mapaCanvas.mapa.id)
             if(respuestaApi.status == 200){
-                let respuesta = await rosbridge.guardar_zona_ros2(mapaCanvas.mapa.zonas)
+                let respuesta = await rosbridge.guardar_zona_ros2(mapaCanvas.mapa.zonas,mapaCanvas)
             }else{
                 borrar_zona(nuevaZona)
                 mostrar(respuestaApi.message)
@@ -222,7 +222,7 @@ document.addEventListener('DOMContentLoaded', event => {
             
             let respuestaApi = await api_res.guardar_zonas(mapaCanvas.mapa.zonas,mapaCanvas.mapa.id)
             if(respuestaApi.status == 200){
-                let respuesta = await rosbridge.guardar_zona_ros2(mapaCanvas.mapa.zonas)
+                let respuesta = await rosbridge.guardar_zona_ros2(mapaCanvas.mapa.zonas,mapaCanvas)
             }else{
                 borrar_zona(nuevaZona)
                 mostrar(respuestaApi.message)

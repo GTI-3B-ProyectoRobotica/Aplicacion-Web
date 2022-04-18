@@ -64,12 +64,19 @@ class ROS2{
      * @param {[Zona]} zonas zonas a guardar
      * @returns Respuesta del servicio guardar zona
      */
-    async guardar_zona_ros2(zonas,nombre){
+    async guardar_zona_ros2(zonas,mapaCanvas){
         this.conectar()
-        // transformar el mapaCanvas.zonas al formato admitido por el servidor ros2
-        // hacer algo tipo let textoAEnviar += zona.toString() y que devuelva ya con el formato que admite ros
-        //let zona =  "transportista:" + posicionInicial.x + "," + posicionInicial.y+ "," + posicionFinal.x + "," + posicionFinal.y
-       // let zona =  "transportista:" + 3 + "," + 1 + "," + 3 + "," + 2 + ";"
+       let strZonas = ""
+       for(let i = 0;i<zonas.length;i++){
+           // cambiar de base a la del ros2 
+            let punto1 = this.cambio_base_punto(zonas[i].xInferior,zonas[i].yInferior,mapaCanvas)
+            let punto2 = this.cambio_base_punto(zonas[i].xSuperior,zonas[i].ySuperior,mapaCanvas)
+            let zonaTemp = new Zona(zonas[i].nombre,punto1.x,punto1.y,punto2.x,punto2.y)
+
+            strZonas+= (i+1) != zonas.length ? zonaTemp.toString()+";" : zonaTemp.toString()
+       }
+       console.log(strZonas);
+     
         try {
             
             console.log("Enviar zonas al servicio")
@@ -83,7 +90,7 @@ class ROS2{
                 serviceType: 'automatix_custom_interface/srv/GuardarZona'
             })
             let request = new ROSLIB.ServiceRequest({
-                zonas: zona
+                zonas: strZonas
             })
 
             service.callService(request, (result) => {
@@ -112,13 +119,14 @@ class ROS2{
      * @param {x:N,y:N} punto punto a cambiar de base
      * @returns {x:N,y:N}
      */
-    cambio_base_punto(punto){
+    cambio_base_punto(xP,yP,mapaCanvas){
         
-        let y = mapaCanvas.altura - punto.y // girar la y porque el robot lo interpreta al reves, el origen de cordenadas esta arriba
+        let y = mapaCanvas.canvas.height - yP // girar la y porque el robot lo interpreta al reves, el origen de cordenadas esta arriba
                                             // en el mapa esta abajo
+        console.log(mapaCanvas);
         return {
-            x: punto.x*mapa.resolucion*mapa.maxMapaX/maxXCanvas,
-            y: y*mapa.resolucion*mapa.maxMapaY/maxYCanvas,
+            x: xP*mapaCanvas.mapa.resolucion*mapaCanvas.mapa.maxMapaX/mapaCanvas.canvas.width,
+            y: y*mapaCanvas.mapa.resolucion*mapaCanvas.mapa.maxMapaY/mapaCanvas.canvas.height,
             
         }
     }
