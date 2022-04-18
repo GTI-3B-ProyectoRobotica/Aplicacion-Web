@@ -48,4 +48,33 @@ class Api{
         return respuesta
     }
 
+
+    // ........................................................................................................................
+    // ........................................................................................................................
+    // ........................................................................................................................
+    /**
+     * Guardar las zonas en la bd a un mapa en especifico
+     * @param {[Zona]} zonas 
+     * @param idMapa
+     * @returns respuesta de la peticion
+     */
+    async guardar_zonas(zonas, idMapa) {
+
+        let body = []
+        zonas.forEach(zona => {
+
+            body.push({"nombre": zona.nombre, "mapa": idMapa,"xSuperior": zona.xSuperior, "ySuperior": zona.ySuperior, "xInferior": zona.xInferior, "yInferior": zona.yInferior})
+        });
+        
+        let respuesta = await fetch(IP_PUERTO + "/zonas", {
+            method: "POST",
+            headers: { 'User-Agent': 'Automatix', 'Content-Type': 'application/json' },
+            body: JSON.stringify(body)
+            }).then(response => {
+                return response
+            })
+        return respuesta
+
+    }
+
 }

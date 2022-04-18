@@ -233,7 +233,7 @@ class CanvasMapa{
      * Funcion para limpiar el canvas
      * @param {*} canvas canvas el cual queremos borrar
      */
-    borrar_canvas(){
+    actualizar_canvas(){
     
         this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
         this.dibujarMapa()

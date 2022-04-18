@@ -8,6 +8,7 @@ const IP_PUERTO = "http://localhost:8080"
 
 const IP_ROS = "ws://192.168.85.207:9090/"
 
+
 var mapaCanvas = null;
 
  /**
@@ -37,6 +38,8 @@ document.addEventListener('DOMContentLoaded', event => {
     var btn_cancelar_add_zona = document.getElementById("btn_cancelar_add_zona")
     var bloque_guardar_zona = document.getElementById("div_guardar_zona")
     var btn_guardar_add_zona_transportista = document.getElementById("btn_guardar_add_zona_transportista")
+    var div_carga = document.getElementById("carga")
+    var div_infomacion = document.getElementById("informacion")
 
     var tabla_zonas = document.getElementById("tabla_zonas");
 
@@ -82,9 +85,12 @@ document.addEventListener('DOMContentLoaded', event => {
             btn_add_zona.style.display = "none"
 
             // obtener imagen del mapa del servidor
+            modo_carga(true);
             let mapa = await api_res.obtenerMapa(1)
+            modo_carga(false);
 
             mapaCanvas = new CanvasMapa(ctx,mapa)
+            mapaCanvas.mapa.id = 1
             
             btn_add_zona.style.display = "block"
             btn_add_zona_transportista.style.display = "block"
@@ -140,9 +146,6 @@ document.addEventListener('DOMContentLoaded', event => {
     }
     
 
-    // ........................................................................................................................
-    // ........................................................................................................................
-    // ........................................................................................................................
     // Logica VIEW
     //==========================================================================================================================
     // Funcion mostrar()
@@ -171,11 +174,19 @@ document.addEventListener('DOMContentLoaded', event => {
     async function guardar_add_zona(){
         let nombre = document.getElementById("input_nombre_guardar_zona").value
         if(nombre.trim().length > 0 && zonaACrear.length==2 && nombre.trim() != "transportista"){
-            mapaCanvas.mapa.zonas.push(new Zona(nombre, zonaACrear[0].x,zonaACrear[0].y,zonaACrear[1].x,zonaACrear[1].y))
-            mapaCanvas.borrar_canvas()
+            let nuevaZona = new Zona(nombre, zonaACrear[0].x,zonaACrear[0].y,zonaACrear[1].x,zonaACrear[1].y)
+            mapaCanvas.mapa.zonas.push(nuevaZona)
             // TODO poner aqui algo de carga en plan un metodo que haga que la vista entre en un modo de carga
-            let respuesta = await rosbridge.guardar_zona_ros2(mapaCanvas.mapa.zonas)
-            mostrar(respuesta)
+            modo_carga(true);
+            
+            let respuestaApi = await api_res.guardar_zonas(mapaCanvas.mapa.zonas,mapaCanvas.mapa.id)
+            if(respuestaApi.status == 200){
+                let respuesta = await rosbridge.guardar_zona_ros2(mapaCanvas.mapa.zonas)
+            }else{
+                borrar_zona(nuevaZona)
+                mostrar(respuestaApi.message)
+            }
+            modo_carga(false);
             // TODO quitar el modo carga
             cancelar_add_zona()
         }else{
@@ -204,11 +215,20 @@ document.addEventListener('DOMContentLoaded', event => {
      */
      async function guardar_add_zona_transportista(){
         if(zonaACrear.length==2){
-            mapaCanvas.mapa.zonas.push(new Zona("transportista", zonaACrear[0].x,zonaACrear[0].y,zonaACrear[1].x,zonaACrear[1].y))
-            mapaCanvas.borrar_canvas()
+            let nuevaZona = new Zona("transportista", zonaACrear[0].x,zonaACrear[0].y,zonaACrear[1].x,zonaACrear[1].y)
+            mapaCanvas.mapa.zonas.push(nuevaZona)
             // TODO poner aqui algo de carga en plan un metodo que haga que la vista entre en un modo de carga
-            let respuesta = await rosbridge.guardar_zona_ros2(mapaCanvas.mapa.zonas)
-            mostrar(respuesta)
+            modo_carga(true);
+            
+            let respuestaApi = await api_res.guardar_zonas(mapaCanvas.mapa.zonas,mapaCanvas.mapa.id)
+            if(respuestaApi.status == 200){
+                let respuesta = await rosbridge.guardar_zona_ros2(mapaCanvas.mapa.zonas)
+            }else{
+                borrar_zona(nuevaZona)
+                mostrar(respuestaApi.message)
+            }
+            modo_carga(false);
+
             // TODO quitar el modo carga
             cancelar_add_zona()
         }else{
@@ -226,15 +246,25 @@ document.addEventListener('DOMContentLoaded', event => {
         btn_cancelar_add_zona.style.display = "none"
         bloque_guardar_zona.style.display = "none"
         btn_guardar_add_zona_transportista.style.display = "none"
-        mapaCanvas.borrar_canvas();
+        mapaCanvas.actualizar_canvas();
         zonaACrear = []
         document.getElementById("input_nombre_guardar_zona").value = ""
     }
 
-    //==========================================================================================================================
-    // FIN ZONA añadir zonas en el canvas
-    //==========================================================================================================================  
-   
+    function modo_carga(isCarga){
+        if(isCarga){
+            // esconder bloque-info
+            div_infomacion.style.display = "none";
+            // mostrar carga
+            div_carga.style.display = "block";
+        }else{
+            // mostrar bloque-info
+            div_infomacion.style.display = "block";
+            // esconder carga
+            div_carga.style.display = "none";
+
+        }
+    }
 });
 
 
