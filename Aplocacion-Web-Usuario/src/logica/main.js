@@ -22,7 +22,7 @@ function borrar_zona(zona){
     console.log("Se borro el indice: ",indice);
     console.log(mapaCanvas.mapa.zonas);
     console.log("-----------------------");
-    mapaCanvas.borrar_canvas()
+    mapaCanvas.actualizar_canvas()
  }
 
 
@@ -30,7 +30,7 @@ document.addEventListener('DOMContentLoaded', event => {
 
     document.getElementById("btn_esc").addEventListener("click", btn_escan)
     document.getElementById("btn_get_map").addEventListener("click", btn_get_mapa)
-    document.getElementById("btn_dis").addEventListener("click", btn_disconnect)
+    //document.getElementById("btn_dis").addEventListener("click", btn_disconnect)
 
     // añadir zonas -----------------------------------
     var btn_add_zona = document.getElementById("btn_add_zona")
@@ -175,7 +175,7 @@ document.addEventListener('DOMContentLoaded', event => {
         let nombre = document.getElementById("input_nombre_guardar_zona").value
         if(nombre.trim().length > 0 && zonaACrear.length==2 && nombre.trim() != "transportista"){
             let escala = mapaCanvas.tamEscaladoImagen;
-            let nuevaZona = new Zona(nombre, zonaACrear[0].x/escala,zonaACrear[0].y/escala,zonaACrear[1]/escala.x,zonaACrear[1].y/escala)
+            let nuevaZona = new Zona(nombre, zonaACrear[0].x/escala,zonaACrear[0].y/escala,zonaACrear[1].x/escala,zonaACrear[1].y/escala)
             mapaCanvas.mapa.zonas.push(nuevaZona)
             // TODO poner aqui algo de carga en plan un metodo que haga que la vista entre en un modo de carga
             modo_carga(true);

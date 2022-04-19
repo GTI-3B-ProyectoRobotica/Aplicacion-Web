@@ -73,8 +73,9 @@ class Zona {
         btn.className = "btn";
         var zona = this;
         btn.onclick = (function() {return function() {borrar_zona(zona);}})();
-        btn.value = "Eliminar"
+        btn.classList.add("iconoEliminar")
         botonTd.append(btn)
+        
 
         fila.append(color)
         fila.append(nombre)
@@ -144,7 +145,7 @@ class CanvasMapa{
         this.defaultCanvasWidth = 300
         this.defaultCanvasHeight = 150
 
-        this.tamEscaladoImagen = 2
+        this.tamEscaladoImagen = 10
 
         this.dibujarMapa();
     }

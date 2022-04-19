@@ -4,8 +4,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AutomatiX</title>
+    <title>Web cliente</title>
     <link rel="stylesheet" href="CSS/estilos.css">
+
+    <script src="https://static.robotwebtools.org/roslibjs/current/roslib.min.js"></script>
+    <script type="text/javascript" src="https://static.robotwebtools.org/EaselJS/current/easeljs.min.js"></script>
+    <script type="text/javascript"
+        src="https://static.robotwebtools.org/EventEmitter2/current/eventemitter2.min.js"></script>
+    <script type="text/javascript" src="https://static.robotwebtools.org/ros2djs/current/ros2d.min.js"></script>
 </head>
 
 <body>
@@ -28,10 +34,40 @@
     <section class="seccionEscanear">
         <div class="contenedorSeccionEscanear">
             <img class="iconoEscanear" src="img/lidarIcon.png" alt="icono de escanear" />
-            <p>No hay un mapa de las instalaciones, enciende el robot, colócalo en el suelo y presiona el boton de escanear para poder guardar el mapa.</p>
+            <p>No hay un mapa de las instalaciones, enciende el robot, colócalo en el suelo y presiona el boton de
+                escanear para poder guardar el mapa.</p>
             <div class="contenedorBtn">
-                <button class="boton">Escanear</button>
+                <button class="boton" id="btn_esc">Escanear</button>
             </div>
+        </div>
+    </section>
+
+    <section class="seccionCarga" id="carga">
+        <div class="spinner"></div>
+    </section>
+
+    <section class="seccionZonas">
+        <div class="contenedorMapa">
+            <canvas id="canvas"></canvas>
+        </div>
+        <div class="contenedorBotones" id="informacion">
+            <p>Guardar una nueva zona</p>
+            <button id="btn_add_zona" style="display: none;">Añadir zona</button>
+            <br>
+            <button class="btn_secundario" id="btn_add_zona_transportista" style="display: none;">Añadir zona de llegada</button>
+            <button id="btn_guardar_add_zona_transportista" style="display: none;">Guardar</button>
+            <div id="div_guardar_zona" style="display: none;">
+                <input class="campoParaIntroducirTexto" type="text" id="input_nombre_guardar_zona"  placeholder=" Nombre de la zona:">
+                <button id="btn_guardar_add_zona">Guardar</button>
+            </div>
+            <br>
+            <button class="botonBorrar" id="btn_cancelar_add_zona" style="display: none;">Cancelar</button>
+            <br>
+            <p class="infoConsola" id="consola"></p>
+            <br>
+            <div id="tabla_zonas"></div>
+            <br>
+            <button class="mt-2 btn btn-success" id="btn_get_map">Cargar mapa</button>
         </div>
     </section>
 
@@ -44,5 +80,9 @@
     </footer>
 
 </body>
+<script src="logica/modelo.js"></script>
+<script src="logica/api.js"></script>
+<script src="logica/ros.js"></script>
+<script src="logica/main.js"></script>
 
 </html>
