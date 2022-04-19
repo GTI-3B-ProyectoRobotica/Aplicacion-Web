@@ -144,7 +144,7 @@ class CanvasMapa{
         this.defaultCanvasWidth = 300
         this.defaultCanvasHeight = 150
 
-        this.tamEscaladoImagen = 5
+        this.tamEscaladoImagen = 2
 
         this.dibujarMapa();
     }
@@ -202,7 +202,11 @@ class CanvasMapa{
             // void ctx.fillRect(x, y, width, height);
             let width = zona.punto_grande.x-zona.punto_pequenyo.x;
             let height = zona.punto_grande.y-zona.punto_pequenyo.y
-            this.context.fillRect(zona.punto_pequenyo.x,zona.punto_pequenyo.y,width,height);
+            this.context.fillRect(
+                zona.punto_pequenyo.x*this.tamEscaladoImagen,
+                zona.punto_pequenyo.y*this.tamEscaladoImagen,
+                width*this.tamEscaladoImagen,
+                height*this.tamEscaladoImagen);
         });
         
     }

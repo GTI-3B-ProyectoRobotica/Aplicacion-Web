@@ -56,6 +56,7 @@ class Api{
      * Guardar las zonas en la bd a un mapa en especifico
      * @param {[Zona]} zonas 
      * @param idMapa
+     * @param escala Escala del mapa, hay que dividir los pixeles por si luego se cambia la escala
      * @returns respuesta de la peticion
      */
     async guardar_zonas(zonas, idMapa) {

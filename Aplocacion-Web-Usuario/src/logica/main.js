@@ -174,7 +174,8 @@ document.addEventListener('DOMContentLoaded', event => {
     async function guardar_add_zona(){
         let nombre = document.getElementById("input_nombre_guardar_zona").value
         if(nombre.trim().length > 0 && zonaACrear.length==2 && nombre.trim() != "transportista"){
-            let nuevaZona = new Zona(nombre, zonaACrear[0].x,zonaACrear[0].y,zonaACrear[1].x,zonaACrear[1].y)
+            let escala = mapaCanvas.tamEscaladoImagen;
+            let nuevaZona = new Zona(nombre, zonaACrear[0].x/escala,zonaACrear[0].y/escala,zonaACrear[1]/escala.x,zonaACrear[1].y/escala)
             mapaCanvas.mapa.zonas.push(nuevaZona)
             // TODO poner aqui algo de carga en plan un metodo que haga que la vista entre en un modo de carga
             modo_carga(true);
@@ -215,7 +216,8 @@ document.addEventListener('DOMContentLoaded', event => {
      */
      async function guardar_add_zona_transportista(){
         if(zonaACrear.length==2){
-            let nuevaZona = new Zona("transportista", zonaACrear[0].x,zonaACrear[0].y,zonaACrear[1].x,zonaACrear[1].y)
+            let escala = mapaCanvas.tamEscaladoImagen; // guardarlo sin escala
+            let nuevaZona = new Zona("transportista", zonaACrear[0].x/escala,zonaACrear[0].y/escala,zonaACrear[1].x/escala,zonaACrear[1].y/escala)
             mapaCanvas.mapa.zonas.push(nuevaZona)
             // TODO poner aqui algo de carga en plan un metodo que haga que la vista entre en un modo de carga
             modo_carga(true);
