@@ -1,0 +1,272 @@
+/*=========================================================================================*/
+/*
+Nombre archivo: estilos.css
+Autor: Juan Ferrera Sala
+Fecha: 14/04/2022
+*/
+@import url('https://fonts.googleapis.com/css2?family=Overpass&display=swap');
+*{
+    box-sizing:border-box;
+    font-family: 'Overpass', sans-serif;
+}
+/*=========================================================================================*/
+/*Body*/
+/*=========================================================================================*/
+body{
+	margin: 0;
+	padding: 0;
+	font-family: Helvetica, Arial, sans-serif;
+	color: #666;
+	background: white; 
+	line-height: 1.5em;
+}
+.contenedor{
+    padding: 2rem;
+}
+.header{
+    background:rgb(50, 50, 50);
+    display: flex;
+    height: 12.5vh;
+}
+.contenedorEnlaces{
+    display:flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-basis: 95%;
+}
+/*=========================================================================================*/
+/*Logo header*/
+/*=========================================================================================*/
+header .linkLogo{
+    margin-left: 2rem;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+}
+.logo-header{
+	text-decoration: none;
+    height: 3.5rem;
+    width: 3.5rem;
+    background-color:#f28500;
+}
+.logo-header:hover {
+	color: #f28500;
+}
+/*=========================================================================================*/
+/*Nav*/
+/*=========================================================================================*/
+.nav{
+    margin-left: 3rem;
+    border-left: 3px white solid;
+    height: 2.5rem;
+    display: flex;
+    align-items: center;
+}
+nav ul{
+    margin: 0;
+	padding: 0;
+	list-style: none;
+	padding-right: 20px;
+    margin-left: 2rem;
+}
+nav ul li{
+    display: inline-block;
+}
+nav ul li a {
+    display: block;
+	padding: 0 10px;
+	text-decoration: none;
+    color: white;
+    border-radius: 8px;
+    align-items: center;
+}
+nav ul li a:hover {
+    color: #f28500;
+    font-weight: bold;
+}
+/*=========================================================================================*/
+/*Boton*/
+/*=========================================================================================*/
+button{
+  width: 17rem;
+  height: 2.5rem;
+  background: #f28500; /* color de fondo */
+  color: #fff; /* color de fuente */
+  border: 2px solid #f28500; /* tamaño y color de borde */
+  padding: 0px;
+  border-radius: 8px; /* redondear bordes */
+  position: relative;
+  z-index: 1;
+  overflow: hidden;
+  display: inline-block;
+  font-size: 20px;
+  box-shadow: 0 2px 4px 0 rgba(0,0,0,0.2);
+  cursor: pointer;
+  
+}
+button:hover {
+  box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+}
+/*=========================================================================================*/
+/*Boton*/
+/*=========================================================================================*/
+
+.botonBorrar{
+    width: 15rem;
+    height: 2rem;
+    background: #a60d1a; /* color de fondo */
+    color: #fff; /* color de fuente */
+    border: 2px solid #a60d1a; /* tamaño y color de borde */
+    padding: 0px;
+    border-radius: 8px; /* redondear bordes */
+    position: relative;
+    z-index: 1;
+    overflow: hidden;
+    display: inline-block;
+    font-size: 20px;
+    box-shadow: 0 2px 4px 0 rgba(0,0,0,0.2);
+    cursor: pointer;
+    
+  }
+  #btnBorrar:before,  #btnBorrar:after {
+    content: "";
+    z-index: -1;
+    position: absolute;
+    width: 50%;
+    height: 100%;
+    top: 0;
+    left: -50%;
+    background-color: #fff; /* color de fondo hover */
+    -webkit-transition: all 0.3s ease-in-out;
+    -o-transition: all 0.3s ease-in-out;
+    transition: all 0.3s ease-in-out;
+  }
+  #btnBorrar:hover {
+    background:white;
+    color: #a60d1a; /* color de fuente hover */
+    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+  }
+/*=========================================================================================*/
+/*Tabla*/
+/*=========================================================================================*/
+th{
+    text-align: start;
+    padding: 1rem;
+}
+td{
+    text-align: start;
+    padding: 1rem;
+}
+.deleteIconTd{
+    text-align: center;
+}
+/*=========================================================================================*/
+/*Carga*/
+/*=========================================================================================*/
+.spinner {
+    position: relative;
+    margin: auto;
+    box-sizing: border-box;
+    background-clip: padding-box;
+    width: 200px;
+    height: 200px;
+    border-radius: 100px;
+    border: 4px solid rgba(255, 255, 255, 0.1);
+    -webkit-mask: linear-gradient(rgba(0, 0, 0, 0.1), #000000 90%);
+    transform-origin: 50% 60%;
+    transform: perspective(200px) rotateX(66deg);
+    animation: spinner-wiggle 1.2s infinite;
+  }
+  .spinner:before,
+  .spinner:after {
+    content: "";
+    position: absolute;
+    margin: -4px;
+    box-sizing: inherit;
+    width: inherit;
+    height: inherit;
+    border-radius: inherit;
+    opacity: .05;
+    border: inherit;
+    border-color: transparent;
+    animation: spinner-spin 1.2s cubic-bezier(0.6, 0.2, 0, 0.8) infinite, spinner-fade 1.2s linear infinite;
+  }
+  
+  .spinner:before {
+    border-top-color: #f28500;
+  }
+  
+  .spinner:after {
+    border-top-color: #000000;
+    animation-delay: 0.3s;
+  }
+  
+  @keyframes spinner-spin {
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+  @keyframes spinner-fade {
+    20% {
+      opacity: .1;
+    }
+    40% {
+      opacity: 1;
+    }
+    60% {
+      opacity: .1;
+    }
+  }
+/*=========================================================================================*/
+/*seccionEscanear*/
+/*=========================================================================================*/
+.seccionEscanear{
+  height: 80.5vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+.contenedorSeccionEscanear{
+  width: 35%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  text-align: center;
+  text-justify: inter-word;
+}
+.contenedorBtn{
+  margin-top: 2rem;
+}
+/*=========================================================================================*/
+/*iconoEscanear*/
+/*=========================================================================================*/
+.iconoEscanear{
+  height: 10rem;
+  width: 10rem;
+}
+/*=========================================================================================*/
+/*footer*/
+/*=========================================================================================*/
+footer{
+    background:rgb(242, 242, 242);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    display:flex;
+    justify-content: start;
+    flex-basis: 80%;
+    color: black;
+}
+
+footer .linkLogo{
+    margin-left: 2rem;
+    margin-top: 0.5rem;
+}
+.contenedorFooter{
+    margin-left: 3rem;
+    border-left: 3px black solid;
+}
+.nombreEmpresa{
+    margin-left: 2rem;
+}
