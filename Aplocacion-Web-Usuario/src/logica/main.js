@@ -12,6 +12,8 @@ var ALTURA = 0
 
 var maxXCanvas = 0;
 var maxYCanvas = 0;
+var maxXImagen = 0;
+var maxYImagen = 0;
 
 var mapa = null;
 
@@ -105,7 +107,6 @@ document.addEventListener('DOMContentLoaded', event => {
                     0,0, defaultCanvasWidth*tam,defaultCanvasHeight*tam);
 
             }
-
 
             canvas.addEventListener("click", function (event) {
 
