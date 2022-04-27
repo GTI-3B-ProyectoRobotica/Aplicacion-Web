@@ -66,7 +66,7 @@ class Api{
 
             body.push({"nombre": zona.nombre, "mapa": idMapa,"xSuperior": zona.xSuperior, "ySuperior": zona.ySuperior, "xInferior": zona.xInferior, "yInferior": zona.yInferior})
         });
-        
+        console.log(JSON.stringify(body));
         let respuesta = await fetch(IP_PUERTO + "/zonas", {
             method: "POST",
             headers: { 'User-Agent': 'Automatix', 'Content-Type': 'application/json' },

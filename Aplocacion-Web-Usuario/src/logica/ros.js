@@ -156,7 +156,7 @@ class ROS2{
                 this.data.service_busy = false
                 this.data.service_response = JSON.stringify(result)
                 
-                mostrar(JSON.stringify(result))
+                console.log(JSON.stringify(result))
             }, (error) => {
                 this.data.service_busy = false
                 console.error("Error en actualizar fichero de ir zona: "+error)

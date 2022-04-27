@@ -145,7 +145,7 @@ class CanvasMapa{
         this.defaultCanvasWidth = 300
         this.defaultCanvasHeight = 150
 
-        this.tamEscaladoImagen = 10
+        this.tamEscaladoImagen = 5 //Por defecto, 5
 
         this.dibujarMapa();
     }
