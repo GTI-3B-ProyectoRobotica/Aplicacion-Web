@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestionar stock</title>
+    <link rel="stylesheet" href="css/estilos.css">
+    <link rel="stylesheet" href="css/gestion.css">
+
+    <script src="https://static.robotwebtools.org/roslibjs/current/roslib.min.js"></script>
+    <script type="text/javascript" src="https://static.robotwebtools.org/EaselJS/current/easeljs.min.js"></script>
+    <script type="text/javascript"
+        src="https://static.robotwebtools.org/EventEmitter2/current/eventemitter2.min.js"></script>
+    <script type="text/javascript" src="https://static.robotwebtools.org/ros2djs/current/ros2d.min.js"></script>
+</head>
+<body>
+    <header class="header">
+        <a class="linkLogo" href="index.html"><img class="logo-header" src="img/logoAutomatiX.png"
+                alt="Logo AutomatiX" /></a>
+        <div class="contenedorEnlaces">
+            <div class="contenedorDiv">
+                <nav class="nav">
+                    <ul>
+                        <li><a href="index.html">Gestion de zonas</a></li>
+                        <li><a href="#">Gestion de stock</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <section class="seccionGestion">
+        <div class="botones">
+            <button id="btn_put_producto">Introducir producto</button>
+            <button id="btn_update_producto">Actualizar producto</button>
+            <button id="btn_guardar_producto">Guardar</button>
+            <span>No se ha podido guardar</span>
+        </div>
+        <div class="inputs">
+            <input type="text" id="nombreZona">
+            <input type="text" id="tipoProducto">
+            <input type="text" id="cantidad">
+        </div>
+        <table id="tablaStock">
+            <tr>
+                <th> Nombre de la zona </th>
+                <th> Tipo de producto </th>
+                <th> Cantidad </th>
+            </tr>
+            <tr>
+                <td>Electronica</td>
+                <td>Memoria RAM</td>
+                <td>1000</td>
+            </tr>
+            <tr>
+                <td>Electronica</td>
+                <td>Teclado</td>
+                <td>500</td>
+            </tr>
+        </table>
+    </section>
+</body>
+</html>

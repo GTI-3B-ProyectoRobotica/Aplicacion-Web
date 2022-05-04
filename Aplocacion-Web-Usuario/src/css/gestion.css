@@ -1,0 +1,28 @@
+/*=========================================================================================*/
+/*
+Nombre archivo: estilos.css
+Autor: Pablo Enguix Llopis
+Fecha: 04/05/2022
+*/
+@import url('https://fonts.googleapis.com/css2?family=Overpass&display=swap');
+*{
+    box-sizing:border-box;
+    font-family: 'Overpass', sans-serif;
+}
+/*=========================================================================================*/
+/*Contenedor gestion*/
+/*=========================================================================================*/
+.seccionGestion{
+    padding: 2rem;
+}
+/*=========================================================================================*/
+/*Tabla*/
+/*=========================================================================================*/
+th{
+    text-align: start;
+    padding: 1rem;
+}
+td{
+    text-align: start;
+    padding: 1rem;
+}
