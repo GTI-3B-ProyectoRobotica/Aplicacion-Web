@@ -161,6 +161,20 @@ button:hover {
   cursor: pointer;
 }
 /*=========================================================================================*/
+/*Boton guardar*/
+/*=========================================================================================*/
+.btnGuardar{
+    background: #60a917; /* color de fondo */
+    color: #fff; /* color de fuente */
+    border: 2px solid #60a917; /* tamaño y color de borde */
+    box-shadow: 0 2px 4px 0 rgba(0,0,0,0.2);
+  }
+.btnGuardar:hover {
+    background:white;
+    color: #60a917; /* color de fuente hover */
+    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+  }
+/*=========================================================================================*/
 /*campoParaIntroducirTexto*/
 /*=========================================================================================*/
   .campoParaIntroducirTexto{

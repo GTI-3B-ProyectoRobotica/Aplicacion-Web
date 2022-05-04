@@ -12,6 +12,7 @@
     <script type="text/javascript"
         src="https://static.robotwebtools.org/EventEmitter2/current/eventemitter2.min.js"></script>
     <script type="text/javascript" src="https://static.robotwebtools.org/ros2djs/current/ros2d.min.js"></script>
+
 </head>
 <body>
     <header class="header">
@@ -30,32 +31,25 @@
     </header>
 
     <section class="seccionGestion">
-        <div class="botones">
-            <button id="btn_put_producto">Introducir producto</button>
-            <button id="btn_update_producto">Actualizar producto</button>
-            <button id="btn_guardar_producto">Guardar</button>
-            <span>No se ha podido guardar</span>
-        </div>
-        <div class="inputs">
-            <input type="text" id="nombreZona">
-            <input type="text" id="tipoProducto">
-            <input type="text" id="cantidad">
-        </div>
+        <h1>Gestion de stock</h1>
         <table id="tablaStock">
             <tr>
-                <th> Nombre de la zona </th>
-                <th> Tipo de producto </th>
+                <th> Zona </th>
+                <th> Nombre </th>
                 <th> Cantidad </th>
+                <th> Precio </th>
             </tr>
             <tr>
                 <td>Electronica</td>
                 <td>Memoria RAM</td>
                 <td>1000</td>
+                <td>35€</td>
             </tr>
             <tr>
                 <td>Electronica</td>
                 <td>Teclado</td>
                 <td>500</td>
+                <td>99.99€</td>
             </tr>
         </table>
     </section>
