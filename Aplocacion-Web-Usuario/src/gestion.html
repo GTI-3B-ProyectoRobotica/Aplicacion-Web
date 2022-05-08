@@ -33,25 +33,21 @@
     <section class="seccionGestion">
         <h1>Gestion de stock</h1>
         <table id="tablaStock">
-            <tr>
-                <th> Zona </th>
-                <th> Nombre </th>
-                <th> Cantidad </th>
-                <th> Precio </th>
-            </tr>
-            <tr>
-                <td>Electronica</td>
-                <td>Memoria RAM</td>
-                <td>1000</td>
-                <td>35€</td>
-            </tr>
-            <tr>
-                <td>Electronica</td>
-                <td>Teclado</td>
-                <td>500</td>
-                <td>99.99€</td>
-            </tr>
+            <tbody id="bodyTablaStock">
+                <tr>
+                    <th> Zona </th>
+                    <th> Nombre </th>
+                    <th> Cantidad </th>
+                    <th> Precio </th>
+                </tr>
+            </tbody>
         </table>
     </section>
+
+    <script src="logica/modelo.js"></script>
+    <script src="logica/api.js"></script>
+    <script src="logica/ros.js"></script>
+    <script src="logica/gestionProductos.js"></script>
+
 </body>
 </html>

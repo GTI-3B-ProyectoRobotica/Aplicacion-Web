@@ -48,6 +48,44 @@ class Api{
         return respuesta
     }
 
+    //==========================================================================================================================
+    // Funcion getProductos()
+    //==========================================================================================================================
+    // idMapa:N   ------>
+    // [Productos]; <---- getProductos() 
+    /**
+     * @param idMapa id del mapa del cual se obtienen la zona
+     * @returns Mapa
+     */
+     async getProductos(idMapa) {
+        
+        var productos = []
+
+        // peticion api
+        let respuesta = await fetch(IP_PUERTO + "/productos?idMapa=" + idMapa, {
+            headers: { 'User-Agent': 'Automatix', 'Content-Type': 'application/json' },
+        }).then(response => {
+            if (response.status == 204) {
+                //ok pero vacío
+                return productos;
+            } else if (response.status == 200) {
+                // ok con contenido 
+                return response.json();
+            } else {
+
+                // error
+                throw Error("Error en getProductos(): " + response.toString())
+            }
+        }).then(mapaJson => {
+            mapaJson.forEach(json=>{
+                productos.push(Producto.FromJson(json))
+            })
+            return productos;
+        }) //then
+        return respuesta
+    }
+
+
 
     // ........................................................................................................................
     // ........................................................................................................................

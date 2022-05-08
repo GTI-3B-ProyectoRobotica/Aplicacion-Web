@@ -145,7 +145,6 @@ document.addEventListener('DOMContentLoaded', event => {
         };
     }
     
-
     // Logica VIEW
     //==========================================================================================================================
     // Funcion mostrar()

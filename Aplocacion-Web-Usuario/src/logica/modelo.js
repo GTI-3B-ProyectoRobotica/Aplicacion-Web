@@ -83,6 +83,53 @@ class Zona {
         return fila
     }
 }
+
+//==============================================================================================================================
+// Clase que representa un producto
+//==============================================================================================================================
+class Producto{
+
+    constructor(id,nombre,cantidad,precio,zona){
+    
+        this.id = id;
+        this.nombre = nombre;
+        this.cantidad = cantidad;
+        this.precio = precio;
+        this.zona = zona
+    }
+
+    // constructor desde el json
+    static FromJson(json) {
+        return new Producto(json['id'], json['nombre'], json['cantidad'], json['precio'], json['zona'])
+    }
+
+    toFilaTabla(){
+        var fila = document.createElement('tr');
+
+        var zona = document.createElement('td');
+        zona.innerText = this.zona
+
+        var nombre = document.createElement('td');
+        nombre.innerText = this.nombre
+        
+        var cantidad = document.createElement('td');
+        cantidad.innerText = this.cantidad
+
+        var precio = document.createElement('td');
+        precio.innerText = this.precio
+          
+
+        fila.append(zona)
+        fila.append(nombre)
+        fila.append(cantidad)
+        fila.append(precio)
+        
+        return fila
+    }
+}
+
+
+
 //==============================================================================================================================
 //Objeto Mapa
 //==============================================================================================================================
@@ -254,3 +301,6 @@ class CanvasMapa{
     }
 
 }
+
+
+
