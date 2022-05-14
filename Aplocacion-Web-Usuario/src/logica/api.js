@@ -62,7 +62,7 @@ class Api{
         var productos = []
 
         // peticion api
-        let respuesta = await fetch(IP_PUERTO + "/productos?idMapa=" + idMapa, {
+        let respuesta = await fetch(IP_PUERTO + "/productos?idmapa=" + idMapa, {
             headers: { 'User-Agent': 'Automatix', 'Content-Type': 'application/json' },
         }).then(response => {
             if (response.status == 204) {
