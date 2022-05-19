@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestionar stock</title>
+    <link rel="stylesheet" href="css/estilos.css">
+    <link rel="stylesheet" href="css/gestion.css">
+
+    <script src="https://static.robotwebtools.org/roslibjs/current/roslib.min.js"></script>
+    <script type="text/javascript" src="https://static.robotwebtools.org/EaselJS/current/easeljs.min.js"></script>
+    <script type="text/javascript"
+        src="https://static.robotwebtools.org/EventEmitter2/current/eventemitter2.min.js"></script>
+    <script type="text/javascript" src="https://static.robotwebtools.org/ros2djs/current/ros2d.min.js"></script>
+
+</head>
+<body>
+    <header class="header">
+        <a class="linkLogo" href="index.html"><img class="logo-header" src="img/logoAutomatiX.png"
+                alt="Logo AutomatiX" /></a>
+        <div class="contenedorEnlaces">
+            <div class="contenedorDiv">
+                <nav class="nav">
+                    <ul>
+                        <li><a href="index.html">Gestion de zonas</a></li>
+                        <li><a href="#">Gestion de stock</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <section class="seccionGestion">
+        <h1>Gestion de stock</h1>
+        <table id="tablaStock">
+            <tbody id="bodyTablaStock">
+                <tr>
+                    <th> Zona </th>
+                    <th> Nombre </th>
+                    <th> Cantidad </th>
+                    <th> Precio </th>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+
+    <script src="logica/modelo.js"></script>
+    <script src="logica/api.js"></script>
+    <script src="logica/ros.js"></script>
+    <script src="logica/gestionProductos.js"></script>
+
+</body>
+</html>
