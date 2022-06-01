@@ -6,25 +6,27 @@
 
 const IP_PUERTO = "http://localhost:8080"
 
-const IP_ROS = "ws://192.168.85.207:9090/"
+const IP_ROS = "ws://10.236.22.11:9090/"
 
 
 var mapaCanvas = null;
+var api_res = new Api(IP_PUERTO)
+var rosbridge = new ROS2(IP_ROS)
 
- /**
-     * Cancela los puntos y no guarda la zona
-     */
-function borrar_zona(zona){
-    console.log("Borrar ----------------");
-    console.log(mapaCanvas.mapa.zonas);
-    let indice = mapaCanvas.mapa.zonas.indexOf(zona);
-    mapaCanvas.mapa.zonas.splice(indice,1)
-    console.log("Se borro el indice: ",indice);
-    console.log(mapaCanvas.mapa.zonas);
-    console.log("-----------------------");
-    mapaCanvas.actualizar_canvas()
- }
-
+    /**
+    * Borra la zona
+    */
+    async function borrar_zona(zona){
+        console.log("Borrar ----------------");
+        console.log("zona: ", zona)
+        let indice = mapaCanvas.mapa.zonas.indexOf(zona);
+        mapaCanvas.mapa.zonas.splice(indice,1)
+        mapaCanvas.actualizar_canvas()
+        rosbridge.conectar()
+        let res = await rosbridge.borrarZonaROS(zona.nombre)
+        let respuestaApi = await api_res.borrarZonaDB(zona.nombre)
+        
+    }
 
 document.addEventListener('DOMContentLoaded', event => {
 
@@ -55,13 +57,6 @@ document.addEventListener('DOMContentLoaded', event => {
     // canvas --------------------------------------
     var canvas = document.getElementById("canvas")
     var ctx = canvas.getContext("2d");
-
-    
-
-
-    var api_res = new Api(IP_PUERTO)
-    var rosbridge = new ROS2(IP_ROS)
-
 
     function btn_disconnect(){
         rosbridge.disconnect();
@@ -152,6 +147,8 @@ document.addEventListener('DOMContentLoaded', event => {
     function mostrar(texto) {
         document.getElementById("consola").innerHTML = texto;
     }
+
+    
 
     //==========================================================================================================================
     // ZONA añadir zonas en el canvas
@@ -266,6 +263,5 @@ document.addEventListener('DOMContentLoaded', event => {
 
         }
     }
+
 });
-
-

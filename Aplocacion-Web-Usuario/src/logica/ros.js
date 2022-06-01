@@ -209,5 +209,43 @@ class ROS2{
         }
     }
 
+    //==========================================================================================================================
+    // Funcion borrarZonaROS(nombre) (ROS)
+    //==========================================================================================================================
+    /**
+     * @returns Respuesta del servicio
+     */
+     async borrarZonaROS(nombre){
+        try {
+
+            this.data.service_busy = true
+            this.data.service_response = ''
+
+            let service = new ROSLIB.Service({
+                ros: this.data.ros,
+                name: '/automatix_borrar_zona',
+                serviceType: 'automatix_custom_interface/srv/BorrarZona'
+            })
+            let request = new ROSLIB.ServiceRequest({
+                zona: nombre
+            })
+            service.callService(request, (result) => {
+                console.log("Llega a ros");
+                this.data.service_busy = false
+                this.data.service_response = JSON.stringify(result)
+                
+                console.log(JSON.stringify(result))
+            }, (error) => {
+                this.data.service_busy = false
+                console.error("Error en borrar zona ros: "+error)
+                return error
+            })
+        } catch (error) {
+            return error
+        }
+
+
+    }
+
 
 }

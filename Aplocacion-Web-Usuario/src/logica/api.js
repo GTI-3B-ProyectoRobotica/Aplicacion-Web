@@ -116,4 +116,36 @@ class Api{
 
     }
 
+    //==========================================================================================================================
+    // Funcion borrarZonaDB()
+    //==========================================================================================================================
+    // nombre: texto   ------>
+    // borrarZonaDB 
+    /**
+     * @param nombre nombre de la zona que queremos borrar
+     */
+     async borrarZonaDB(nombre) {
+        
+        console.log("El codigo llego a borrarZonaDB")
+
+        // peticion api
+        let respuesta = await fetch( IP_PUERTO+"/zona?nombre="+nombre+"",{
+            headers : { 'User-Agent' : 'Automatix', 'Content-Type' : 'application/json' },
+            method : "DELETE"
+           }).then(response=>{
+               if(response.status == 204){
+                  //ok pero vacío
+                  return {};
+               }else if(response.status == 200){
+                  // ok con contenido
+                  return response.json();
+               }else{
+
+                  // error
+                  throw Error("Error en borrarZonaDB: "+response.toString())
+               }
+
+           })
+    }
+
 }
