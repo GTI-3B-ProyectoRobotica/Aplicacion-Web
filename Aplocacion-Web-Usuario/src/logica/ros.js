@@ -67,12 +67,21 @@ class ROS2{
     async guardar_zona_ros2(zonas,mapaCanvas){
         this.conectar()
        let strZonas = ""
+
        for(let i = 0;i<zonas.length;i++){
            // cambiar de base a la del ros2 
-            let punto1 = this.cambio_base_punto(zonas[i].xInferior,zonas[i].yInferior,mapaCanvas)
-            let punto2 = this.cambio_base_punto(zonas[i].xSuperior,zonas[i].ySuperior,mapaCanvas)
-            let zonaTemp = new Zona(zonas[i].nombre,punto1.x,punto1.y,punto2.x,punto2.y)
+           console.log("Se guarda---------------------");
+            console.log(zonas[i]);
+            let punto1 = zonas[i].puntoRos1
+            let punto2 = zonas[i].puntoRos2
+            console.log("punto1---------------------");
+            console.log(punto1);
+            console.log("punto2---------------------");
+            console.log(punto2);
 
+            let zonaTemp = new Zona(zonas[i].nombre,punto1.x,punto1.y,punto2.x,punto2.y)
+            console.log("zona temps---------------------");
+            console.log(zonaTemp);
             strZonas+= (i+1) != zonas.length ? zonaTemp.toString()+";" : zonaTemp.toString()
        }
        console.log(strZonas);
@@ -121,12 +130,13 @@ class ROS2{
      */
     cambio_base_punto(xP,yP,mapaCanvas){
         
-        let y = mapaCanvas.canvas.height - yP // girar la y porque el robot lo interpreta al reves, el origen de cordenadas esta arriba
-                                            // en el mapa esta abajo
-        console.log(mapaCanvas);
+        
+        let yMaxMapaPuntos = mapaCanvas.canvas.height*mapaCanvas.mapa.resolucion*mapaCanvas.mapa.maxMapaY/mapaCanvas.canvas.height
+        //let y = mapaCanvas.canvas.height - yP; // girar la y porque el robot lo interpreta al reves, el origen de cordenadas esta arriba
+        // en el mapa esta abajo
         return {
             x: xP*mapaCanvas.mapa.resolucion*mapaCanvas.mapa.maxMapaX/mapaCanvas.canvas.width,
-            y: y*mapaCanvas.mapa.resolucion*mapaCanvas.mapa.maxMapaY/mapaCanvas.canvas.height,
+            y: yMaxMapaPuntos -  yP*mapaCanvas.mapa.resolucion*mapaCanvas.mapa.maxMapaY/mapaCanvas.canvas.height,
             
         }
     }

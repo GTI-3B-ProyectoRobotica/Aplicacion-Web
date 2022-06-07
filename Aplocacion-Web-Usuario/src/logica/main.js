@@ -6,7 +6,7 @@
 
 const IP_PUERTO = "http://localhost:8080"
 
-const IP_ROS = "ws://192.168.85.207:9090/"
+const IP_ROS = "ws://192.168.85.39:9090/"
 
 
 var mapaCanvas = null;
@@ -100,15 +100,15 @@ document.addEventListener('DOMContentLoaded', event => {
 
             mapaCanvas.canvas.addEventListener("click", function (event) {
                 
-                // funcion on click del canvas-------------------------------------------
+                // funcion on click del canvas-------------------------------------------                    
                 if(is_add_zona_enable){
-
+                    console.log("callback---------------------");
                     // obtener el punto
                     var ctx = mapaCanvas.canvas.getContext("2d");
                     ctx.beginPath();
                     pos = getMousePos(event, mapaCanvas.canvas);
+                     
                     
-
                     if(zonaACrear.length < 2){
                         // si hay 0 o uno hacer append del punto
                         zonaACrear.push(pos)
@@ -174,7 +174,18 @@ document.addEventListener('DOMContentLoaded', event => {
         let nombre = document.getElementById("input_nombre_guardar_zona").value
         if(nombre.trim().length > 0 && zonaACrear.length==2 && nombre.trim() != "transportista"){
             let escala = mapaCanvas.tamEscaladoImagen;
-            let nuevaZona = new Zona(nombre, zonaACrear[0].x/escala,zonaACrear[0].y/escala,zonaACrear[1].x/escala,zonaACrear[1].y/escala)
+            
+            let puntoRos1 = rosbridge.cambio_base_punto(zonaACrear[0].x,zonaACrear[0].y,mapaCanvas);
+            let puntoRos2 = rosbridge.cambio_base_punto(zonaACrear[1].x,zonaACrear[1].y,mapaCanvas);
+             
+            let nuevaZona = new Zona(nombre, 
+                zonaACrear[0].x/escala,
+                zonaACrear[0].y/escala,
+                zonaACrear[1].x/escala,
+                zonaACrear[1].y/escala,
+                puntoRos1,puntoRos2)
+             
+            console.log(pos);  
             mapaCanvas.mapa.zonas.push(nuevaZona)
             // TODO poner aqui algo de carga en plan un metodo que haga que la vista entre en un modo de carga
             modo_carga(true);
@@ -216,7 +227,16 @@ document.addEventListener('DOMContentLoaded', event => {
      async function guardar_add_zona_transportista(){
         if(zonaACrear.length==2){
             let escala = mapaCanvas.tamEscaladoImagen; // guardarlo sin escala
-            let nuevaZona = new Zona("transportista", zonaACrear[0].x/escala,zonaACrear[0].y/escala,zonaACrear[1].x/escala,zonaACrear[1].y/escala)
+            let puntoRos1 = rosbridge.cambio_base_punto(zonaACrear[0].x,zonaACrear[0].y,mapaCanvas);
+            let puntoRos2 = rosbridge.cambio_base_punto(zonaACrear[1].x,zonaACrear[1].y,mapaCanvas);
+             
+            let nuevaZona = new Zona("transportista", 
+                zonaACrear[0].x/escala,
+                zonaACrear[0].y/escala,
+                zonaACrear[1].x/escala,
+                zonaACrear[1].y/escala,
+                puntoRos1,puntoRos2)
+            console.log("nueva zona: ", nuevaZona);
             mapaCanvas.mapa.zonas.push(nuevaZona)
             // TODO poner aqui algo de carga en plan un metodo que haga que la vista entre en un modo de carga
             modo_carga(true);
