@@ -4,8 +4,8 @@
 // Descripcion: En este archivo se encuentran todas las funiones que utiliza la app del transportista: connect(),disconnect(),enviarRobotZonaRecogida().
 //===================================================================================================================================================
 
-const IP_PUERTO = "http://192.168.87.164:8080"
-const IP_ROS = "ws://192.168.85.207:9090/"
+const IP_PUERTO = "http://localhost:8080"
+const IP_ROS = "ws://192.168.85.39:9090/"
 
 document.addEventListener('DOMContentLoaded', event => {
 
@@ -168,34 +168,3 @@ document.addEventListener('DOMContentLoaded', event => {
 
 
 
-
-
-// ........................................................................................................................
-// ........................................................................................................................
-// ........................................................................................................................
-// MODELO
-class Zona {
-
-    // constructor parametrizado
-    constructor(nombre,xInferior, yInferior, xSuperior, ySuperior){
-        this.nombre = nombre;
-        this.xInferior = xInferior;
-        this.yInferior = yInferior;
-        this.xSuperior = xSuperior;
-        this.ySuperior = ySuperior;
-    }
-    // constructor desde el json
-    static ZonaFromJson(json){
-        console.log("Desde constructor")
-        console.log(json)
-        return new Zona(json.nombre,json['xInferior'],json['yInferior'],json['xSuperior'],json['ySuperior'])
-    }
-
-     /**
-      * @returns string con formato nombre:xinferior$xsuperior$yinferior$ysuperior;
-      */
-    toString(){
-        return this.nombre+":"+this.xInferior+"$"+this.xSuperior+"$"+this.yInferior+"$"+this.ySuperior+";"
-    }
-
-}

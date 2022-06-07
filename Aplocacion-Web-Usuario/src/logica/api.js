@@ -74,9 +74,10 @@ class Api{
             } else {
 
                 // error
-                throw Error("Error en getProductos(): " + response.toString())
+                console.log("Error en getProductos(): " + response.toString())
             }
         }).then(mapaJson => {
+            console.log(mapaJson);
             mapaJson.forEach(json=>{
                 productos.push(Producto.FromJson(json))
             })

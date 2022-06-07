@@ -8,13 +8,15 @@
 class Zona {
     // constructor parametrizado
     // nombre, (x,y) superior, (x,y) inferiro y color asociado (se pone al pintar en el canvas)
-    constructor(nombre, xInferior, yInferior, xSuperior, ySuperior) {
+    constructor(nombre, xInferior, yInferior, xSuperior, ySuperior, puntoRos1,puntoRos2) {
         this.nombre = nombre;
         this.xInferior = xInferior;
         this.yInferior = yInferior;
         this.xSuperior = xSuperior;
         this.ySuperior = ySuperior;
-
+        this.puntoRos1 = puntoRos1;
+        this.puntoRos2 = puntoRos2;
+        
         this.color = ""
 
         // calcular el punto mas cerca del 0 y el mas lejos para la representacion
